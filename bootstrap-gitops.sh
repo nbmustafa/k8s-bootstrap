@@ -135,20 +135,47 @@ GITOPSREADME
 }
 
 download_helm_charts() {
-    log_info "Downloading Helm charts locally..."
-    
-    helm repo add argo https://argoproj.github.io/argo-helm
-    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-    helm repo add grafana https://grafana.github.io/helm-charts
-    helm repo update
-    
-    log_info "Downloading ArgoCD chart..."
-    helm pull argo/argo-cd --untar --untardir "${CHARTS_DIR}/argocd" --version 7.7.12
-    
-    log_info "Downloading Prometheus chart..."
-    helm pull prometheus-community/kube-prometheus-stack --untar --untardir "${CHARTS_DIR}/prometheus" --version 67.6.0
-    
-    log_success "Helm charts downloaded successfully"
+    log_info "Checking Helm charts..."
+
+    local argocd_chart="${CHARTS_DIR}/argocd/argo-cd"
+    local prometheus_chart="${CHARTS_DIR}/prometheus/kube-prometheus-stack"
+    local need_repo_update=false
+
+    # Determine if any chart is missing before touching the network
+    if [ ! -d "${argocd_chart}" ] || [ ! -f "${argocd_chart}/Chart.yaml" ]; then
+        need_repo_update=true
+    fi
+    if [ ! -d "${prometheus_chart}" ] || [ ! -f "${prometheus_chart}/Chart.yaml" ]; then
+        need_repo_update=true
+    fi
+
+    if [ "${need_repo_update}" = true ]; then
+        log_info "Adding Helm repos and updating..."
+        helm repo add argo https://argoproj.github.io/argo-helm 2>/dev/null || true
+        helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 2>/dev/null || true
+        helm repo add grafana https://grafana.github.io/helm-charts 2>/dev/null || true
+        helm repo update
+    else
+        log_info "All Helm charts already present, skipping repo update"
+    fi
+
+    if [ ! -d "${argocd_chart}" ] || [ ! -f "${argocd_chart}/Chart.yaml" ]; then
+        log_info "Downloading ArgoCD chart..."
+        helm pull argo/argo-cd --untar --untardir "${CHARTS_DIR}/argocd" --version 7.7.12
+        log_success "ArgoCD chart downloaded"
+    else
+        log_info "ArgoCD chart already present, skipping"
+    fi
+
+    if [ ! -d "${prometheus_chart}" ] || [ ! -f "${prometheus_chart}/Chart.yaml" ]; then
+        log_info "Downloading Prometheus chart..."
+        helm pull prometheus-community/kube-prometheus-stack --untar --untardir "${CHARTS_DIR}/prometheus" --version 67.6.0
+        log_success "Prometheus chart downloaded"
+    else
+        log_info "Prometheus chart already present, skipping"
+    fi
+
+    log_success "Helm charts ready"
 }
 
 create_helm_values() {
