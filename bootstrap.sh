@@ -103,15 +103,15 @@ download_helm_charts() {
     
     # Download ArgoCD chart
     log_info "Downloading ArgoCD chart..."
-    helm pull argo/argo-cd --untar --untardir "${CHARTS_DIR}/argocd" --version 7.7.12
+    helm pull argo/argo-cd --untar --untardir "${CHARTS_DIR}/argocd" --version 9.5.0
     
     # Download Prometheus chart
     log_info "Downloading Prometheus chart..."
-    helm pull prometheus-community/kube-prometheus-stack --untar --untardir "${CHARTS_DIR}/prometheus" --version 67.6.0
+    helm pull prometheus-community/kube-prometheus-stack --untar --untardir "${CHARTS_DIR}/prometheus" --version 83.4.0
     
     # Download Grafana chart (standalone, though prometheus-stack includes it)
     log_info "Downloading Grafana chart..."
-    helm pull grafana/grafana --untar --untardir "${CHARTS_DIR}/grafana" --version 8.8.3
+    helm pull grafana/grafana --untar --untardir "${CHARTS_DIR}/grafana" --version 10.5.15
     
     log_success "Helm charts downloaded successfully"
 }
