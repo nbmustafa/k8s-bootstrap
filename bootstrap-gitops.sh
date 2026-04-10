@@ -243,7 +243,7 @@ grafana:
         type: prometheus
         url: http://prometheus-kube-prometheus-prometheus.monitoring:9090
         access: proxy
-        isDefault: true
+        isDefault: false
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
