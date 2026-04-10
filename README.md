@@ -1,6 +1,6 @@
 # Kubernetes Sandbox Bootstrap
 
-A production-ready, single-script solution for deploying a complete Kubernetes sandbox environment with GitOps capabilities.
+A single-script solution for deploying a complete Kubernetes sandbox environment with GitOps capabilities.
 
 ## 🎯 Features
 
