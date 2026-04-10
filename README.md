@@ -344,6 +344,16 @@ kubectl patch application prometheus-stack -n argocd \
   --type merge -p '{"operation":{"initiatedBy":{"username":"admin"},"sync":{"revision":"HEAD"}}}'
 ```
 
+```bash
+cd gitops-repo/apps
+
+# Add new app
+vim my-app.yaml
+
+git add .
+git commit -m "Add my app"
+```
+
 ## 📚 Resources
 
 - [ArgoCD Documentation](https://argo-cd.readthedocs.io/)
